@@ -1,6 +1,6 @@
 config {
-  module = true
-  force  = false
+  call_module_type = "all"
+  force            = false
 }
 
 plugin "terraform" {
@@ -10,6 +10,6 @@ plugin "terraform" {
 
 plugin "aws" {
   enabled = true
-  version = "0.32.0"
+  version = "0.46.0"
   source  = "github.com/terraform-linters/tflint-ruleset-aws"
 }
