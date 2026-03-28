@@ -1,0 +1,52 @@
+# ===============================
+# Terraform State Files
+# ===============================
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Terraform lock file (optional: many teams keep it, but safe to ignore for student projects)
+.terraform.lock.hcl
+
+# Terraform working directory
+.terraform/
+
+# ===============================
+# Variable files (may contain secrets)
+# ===============================
+*.tfvars
+*.tfvars.json
+
+# Allow example variable files
+!*.example.tfvars
+
+# ===============================
+# CLI configuration files
+# ===============================
+.terraformrc
+terraform.rc
+
+# ===============================
+# Sensitive override files
+# ===============================
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ===============================
+# OS / Editor files
+# ===============================
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# Logs
+*.log
