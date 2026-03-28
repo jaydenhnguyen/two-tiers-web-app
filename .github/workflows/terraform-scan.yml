@@ -1,0 +1,72 @@
+name: Terraform Scan
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+  security-events: write
+
+jobs:
+  terraform-scan:
+    name: TFLint and Trivy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Show versions
+        run: |
+          terraform version
+          tflint --version
+
+      - name: Init TFLint plugins
+        run: tflint --init
+
+      - name: Terraform format check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init (no backend)
+        run: |
+          terraform -chdir=environments/dev init -backend=false
+          terraform -chdir=environments/staging init -backend=false
+          terraform -chdir=environments/prod init -backend=false
+
+      - name: Terraform validate
+        run: |
+          terraform -chdir=environments/dev validate
+          terraform -chdir=environments/staging validate
+          terraform -chdir=environments/prod validate
+
+      - name: Run TFLint on dev
+        run: tflint --chdir=environments/dev
+
+      - name: Run TFLint on staging
+        run: tflint --chdir=environments/staging
+
+      - name: Run TFLint on prod
+        run: tflint --chdir=environments/prod
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: config
+          scan-ref: .
+          format: table
+          exit-code: 1
+          severity: HIGH,CRITICAL
