@@ -1,10 +1,14 @@
+locals {
+  name_prefix = "${var.project_name}-${var.environment}"
+}
+
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-Vpc"
+    Name = "${local.name_prefix}-Vpc"
   }
 }
 
@@ -17,7 +21,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-PublicSubnet${count.index + 1}"
+    Name = "${local.name_prefix}-PublicSubnet${count.index + 1}"
   }
 }
 
@@ -29,7 +33,7 @@ resource "aws_subnet" "private" {
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-PrivateSubnet${count.index + 1}"
+    Name = "${local.name_prefix}-PrivateSubnet${count.index + 1}"
   }
 }
 
@@ -37,7 +41,7 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-Igw"
+    Name = "${local.name_prefix}-Igw"
   }
 }
 
@@ -45,7 +49,7 @@ resource "aws_eip" "nat" {
   domain = "vpc"
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-NatEip"
+    Name = "${local.name_prefix}-NatEip"
   }
 }
 
@@ -56,7 +60,7 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-NatGateway"
+    Name = "${local.name_prefix}-NatGateway"
   }
 }
 
@@ -69,7 +73,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-PublicRouteTable"
+    Name = "${local.name_prefix}-PublicRouteTable"
   }
 }
 
@@ -82,7 +86,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-PrivateRouteTable"
+    Name = "${local.name_prefix}-PrivateRouteTable"
   }
 }
 
