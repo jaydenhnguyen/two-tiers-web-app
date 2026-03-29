@@ -3,11 +3,12 @@ locals {
 }
 
 resource "aws_lb" "this" {
-  name               = "${local.name_prefix}-Alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [var.alb_security_group_id]
-  subnets            = var.public_subnet_ids
+  name                       = "${local.name_prefix}-Alb"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [var.alb_security_group_id]
+  subnets                    = var.public_subnet_ids
+  drop_invalid_header_fields = true
 
   tags = merge(var.tags, {
     Name = "${local.name_prefix}-Alb"
