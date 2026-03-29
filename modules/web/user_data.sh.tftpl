@@ -1,0 +1,32 @@
+#!/bin/bash
+set -euo pipefail
+
+dnf update -y
+dnf install -y httpd awscli
+systemctl enable httpd
+systemctl start httpd
+
+mkdir -p /var/www/html/assets
+
+if aws s3 cp "s3://${bucket_name}/${image_key}" "/var/www/html/assets/site-image"; then
+  IMAGE_TAG="<img src=\"/assets/site-image\" alt=\"Site image\" style=\"max-width: 640px; height: auto;\">"
+else
+  IMAGE_TAG="<p>Image download failed from s3://${bucket_name}/${image_key}</p>"
+fi
+
+cat > /var/www/html/index.html <<EOF
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${team_name} - ${environment}</title>
+</head>
+<body>
+  <h1>${team_name}</h1>
+  <p>Environment: ${environment}</p>
+  <p>Team Members: ${members}</p>
+  ${IMAGE_TAG}
+</body>
+</html>
+EOF
