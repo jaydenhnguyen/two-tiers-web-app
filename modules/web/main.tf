@@ -4,10 +4,10 @@ locals {
 }
 
 resource "aws_launch_template" "web" {
-  name_prefix   = "${local.name_prefix}-WebLt-"
-  image_id      = var.ami_id
-  instance_type = var.instance_type
-  key_name      = var.public_key_name
+  name_prefix            = "${local.name_prefix}-WebLt-"
+  image_id               = var.ami_id
+  instance_type          = var.instance_type
+  key_name               = var.public_key_name
   vpc_security_group_ids = [var.web_security_group_id]
 
   iam_instance_profile {
