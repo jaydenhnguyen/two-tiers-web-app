@@ -15,8 +15,8 @@ resource "aws_lb" "this" {
   })
 }
 
-resource "aws_lb_target_group" "web" {
-  name        = "${local.name_prefix}-WebTg"
+resource "aws_lb_target_group" "web_server" {
+  name        = "${local.name_prefix}-WebServerTG"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -34,7 +34,7 @@ resource "aws_lb_target_group" "web" {
   }
 
   tags = merge(var.tags, {
-    Name = "${local.name_prefix}-WebTg"
+    Name = "${local.name_prefix}-WebServerTG"
   })
 }
 
@@ -45,6 +45,6 @@ resource "aws_lb_listener" "http" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.web.arn
+    target_group_arn = aws_lb_target_group.web_server.arn
   }
 }
