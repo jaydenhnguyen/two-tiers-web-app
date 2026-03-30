@@ -3,23 +3,23 @@ locals {
   members_line = length(var.team_members) > 0 ? join(", ", var.team_members) : "TBD"
 }
 
-resource "aws_launch_template" "web" {
-  name_prefix            = "${local.name_prefix}-WebLt-"
+resource "aws_launch_template" "web_server_LT" {
+  name_prefix            = "${local.name_prefix}-WebLT"
   image_id               = var.ami_id
   instance_type          = var.instance_type
   key_name               = var.public_key_name
-  vpc_security_group_ids = [var.web_security_group_id]
+  vpc_security_group_ids = [var.web_server_security_group_id]
 
   iam_instance_profile {
     name = var.instance_profile_name
   }
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh.tftpl", {
-    bucket_name = var.s3_bucket_name
-    image_key   = var.s3_image_key
-    team_name   = var.team_name
-    members     = local.members_line
-    environment = var.environment
+    image_bucket_name = var.image_bucket_name
+    image_file_name   = var.image_file_name
+    team_name         = var.team_name
+    members           = local.members_line
+    environment       = var.environment
   }))
 
   metadata_options {
@@ -31,11 +31,11 @@ resource "aws_launch_template" "web" {
     resource_type = "instance"
 
     tags = merge(var.tags, {
-      Name = "${local.name_prefix}-Web"
+      Name = "${local.name_prefix}-Web-server"
     })
   }
 
   tags = merge(var.tags, {
-    Name = "${local.name_prefix}-WebLt"
+    Name = "${local.name_prefix}-WebLT"
   })
 }

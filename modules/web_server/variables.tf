@@ -9,22 +9,22 @@ variable "environment" {
 }
 
 variable "ami_id" {
-  description = "AMI ID for web instances"
+  description = "AMI ID for web server"
   type        = string
 }
 
 variable "instance_type" {
-  description = "EC2 instance type for web instances"
+  description = "EC2 instance type for web server"
   type        = string
 }
 
-variable "web_security_group_id" {
-  description = "Security group ID used by web instances"
+variable "web_server_security_group_id" {
+  description = "Security group ID used by web server"
   type        = string
 }
 
 variable "instance_profile_name" {
-  description = "IAM instance profile name (from iam module) attached to web instances"
+  description = "IAM instance profile name (from iam module) attached to web server"
   type        = string
 }
 
@@ -34,12 +34,12 @@ variable "public_key_name" {
   default     = null
 }
 
-variable "s3_bucket_name" {
+variable "image_bucket_name" {
   description = "S3 bucket that stores website assets"
   type        = string
 }
 
-variable "s3_image_key" {
+variable "image_file_name" {
   description = "S3 object key for the image shown on the web page"
   type        = string
 }

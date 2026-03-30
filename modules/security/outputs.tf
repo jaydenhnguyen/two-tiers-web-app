@@ -3,9 +3,9 @@ output "alb_security_group_id" {
   value       = aws_security_group.alb.id
 }
 
-output "web_security_group_id" {
+output "web_server_security_group_id" {
   description = "Security group ID for the web servers"
-  value       = aws_security_group.web.id
+  value       = aws_security_group.web_server.id
 }
 
 output "bastion_security_group_id" {
