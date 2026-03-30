@@ -10,6 +10,14 @@ resource "aws_instance" "this" {
   key_name                    = var.key_name
   associate_public_ip_address = true
 
+  root_block_device {
+    encrypted = true
+  }
+
+  metadata_options {
+    http_tokens = "required"
+  }
+
   tags = merge(var.tags, {
     Name = "${local.name_prefix}-Bastion"
     Tier = "Bastion"

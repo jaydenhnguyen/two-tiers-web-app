@@ -63,12 +63,11 @@ resource "aws_security_group" "web_server" {
   }
 
   egress {
-    #trivy:ignore:AVD-AWS-0104
     description = "Allow outbound for updates, S3, and health checks"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] #trivy:ignore:AVD-AWS-0104
   }
 
   tags = merge(var.tags, {
