@@ -18,7 +18,7 @@ resource "aws_lb" "this" {
   })
 }
 
-resource "aws_lb_target_group" "web" {
+resource "aws_lb_target_group" "web_server" {
   name        = local.target_group_name
   port        = 80
   protocol    = "HTTP"
@@ -48,6 +48,6 @@ resource "aws_lb_listener" "http" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.web.arn
+    target_group_arn = aws_lb_target_group.web_server.arn
   }
 }
