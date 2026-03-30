@@ -43,18 +43,20 @@ resource "aws_iam_role" "web" {
   name               = "${local.name_prefix}-WebRole"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
 
-  tags = merge(var.tags, {
-    Name = "${local.name_prefix}-WebRole"
-  })
+  /*Comment out tags to align with lab account's policy*/
+  # tags = merge(var.tags, {
+  #   Name = "${local.name_prefix}-WebRole"
+  # })
 }
 
 resource "aws_iam_policy" "web_s3_read" {
   name   = "${local.name_prefix}-WebS3ReadPolicy"
   policy = data.aws_iam_policy_document.s3_read_policy.json
 
-  tags = merge(var.tags, {
-    Name = "${local.name_prefix}-WebS3ReadPolicy"
-  })
+  /*Comment out tags to align with lab account's policy*/
+  # tags = merge(var.tags, {
+  #   Name = "${local.name_prefix}-WebS3ReadPolicy"
+  # })
 }
 
 resource "aws_iam_role_policy_attachment" "web_s3_read" {
