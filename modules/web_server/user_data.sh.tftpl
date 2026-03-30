@@ -8,10 +8,10 @@ systemctl start httpd
 
 mkdir -p /var/www/html/assets
 
-if aws s3 cp "s3://${bucket_name}/${image_key}" "/var/www/html/assets/site-image"; then
+if aws s3 cp "s3://${image_bucket_name}/${image_file_name}" "/var/www/html/assets/site-image"; then
   IMAGE_TAG="<img src=\"/assets/site-image\" alt=\"Site image\" style=\"max-width: 640px; height: auto;\">"
 else
-  IMAGE_TAG="<p>Image download failed from s3://${bucket_name}/${image_key}</p>"
+  IMAGE_TAG="<p>Image download failed from s3://${image_bucket_name}/${image_file_name}</p>"
 fi
 
 cat > /var/www/html/index.html <<EOF

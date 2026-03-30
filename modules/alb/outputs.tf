@@ -10,7 +10,7 @@ output "alb_dns_name" {
 
 output "target_group_arn" {
   description = "Web target group ARN"
-  value       = aws_lb_target_group.web.arn
+  value       = aws_lb_target_group.web_server.arn
 }
 
 output "listener_arn" {

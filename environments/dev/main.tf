@@ -62,18 +62,18 @@ module "alb" {
 module "web_server" {
   source = "../../modules/web_server"
 
-  project_name          = var.project_name
-  environment           = local.environment
-  ami_id                = var.ami_id
-  instance_type         = var.vm_instance_type
+  project_name                 = var.project_name
+  environment                  = local.environment
+  ami_id                       = var.ami_id
+  instance_type                = var.vm_instance_type
   web_server_security_group_id = module.security.web_server_security_group_id
-  instance_profile_name = module.iam.web_instance_profile_name
-  public_key_name       = var.key_pair_name
-  image_bucket_name     = var.image_bucket_name
-  image_file_name       = var.image_file_name
-  team_name             = var.team_name
-  team_members          = var.team_members
-  tags                  = local.common_tags
+  instance_profile_name        = module.iam.web_instance_profile_name
+  public_key_name              = var.key_pair_name
+  image_bucket_name            = var.image_bucket_name
+  image_file_name              = var.image_file_name
+  team_name                    = var.team_name
+  team_members                 = var.team_members
+  tags                         = local.common_tags
 }
 
 module "bastion" {
@@ -92,13 +92,13 @@ module "bastion" {
 module "asg" {
   source = "../../modules/asg"
 
-  project_name       = var.project_name
-  environment        = local.environment
-  private_subnet_ids = module.network.private_subnet_ids
-  launch_template_id = module.web_server.launch_template_id
-  target_group_arns  = [module.alb.target_group_arn]
-  instances_min_size           = var.server_min_size
-  instances_max_size           = var.server_max_size
-  instance_desired_capacity   = var.server_desired_capacity
-  tags               = local.common_tags
+  project_name              = var.project_name
+  environment               = local.environment
+  private_subnet_ids        = module.network.private_subnet_ids
+  launch_template_id        = module.web_server.launch_template_id
+  target_group_arns         = [module.alb.target_group_arn]
+  instances_min_size        = var.server_min_size
+  instances_max_size        = var.server_max_size
+  instance_desired_capacity = var.server_desired_capacity
+  tags                      = local.common_tags
 }

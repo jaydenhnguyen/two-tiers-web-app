@@ -29,17 +29,17 @@ variable "target_group_arns" {
   type        = list(string)
 }
 
-variable "min_size" {
+variable "instances_min_size" {
   description = "Minimum number of instances in the ASG"
   type        = number
 }
 
-variable "max_size" {
+variable "instances_max_size" {
   description = "Maximum number of instances in the ASG"
   type        = number
 }
 
-variable "desired_capacity" {
+variable "instance_desired_capacity" {
   description = "Desired number of instances (null to omit and use min_size behavior)"
   type        = number
   default     = null
