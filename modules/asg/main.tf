@@ -5,9 +5,9 @@ locals {
 resource "aws_autoscaling_group" "web" {
   name                      = "${local.name_prefix}-WebAsg"
   vpc_zone_identifier       = var.private_subnet_ids
-  min_size                  = var.min_size
-  max_size                  = var.max_size
-  desired_capacity          = var.desired_capacity
+  min_size                  = var.instances_min_size
+  max_size                  = var.instances_max_size
+  desired_capacity          = var.instance_desired_capacity
   health_check_type         = "ELB"
   health_check_grace_period = var.health_check_grace_period
   default_cooldown          = 300

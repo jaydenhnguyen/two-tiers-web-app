@@ -8,7 +8,7 @@ variable "environment" {
   type        = string
 }
 
-variable "s3_bucket_name" {
+variable "image_bucket_name" {
   description = "S3 bucket that web instances read website assets from"
   type        = string
 }

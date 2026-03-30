@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "s3_read_policy" {
       "s3:GetObject"
     ]
     resources = [
-      "arn:aws:s3:::${var.s3_bucket_name}/*"
+      "arn:aws:s3:::${var.image_bucket_name}/*"
     ]
   }
 
@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "s3_read_policy" {
       "s3:ListBucket"
     ]
     resources = [
-      "arn:aws:s3:::${var.s3_bucket_name}"
+      "arn:aws:s3:::${var.image_bucket_name}"
     ]
   }
 }
@@ -62,7 +62,7 @@ resource "aws_iam_role_policy_attachment" "web_s3_read" {
   policy_arn = aws_iam_policy.web_s3_read.arn
 }
 
-resource "aws_iam_instance_profile" "web" {
+resource "aws_iam_instance_profile" "web_server" {
   name = "${local.name_prefix}-WebInstanceProfile"
   role = aws_iam_role.web.name
 }

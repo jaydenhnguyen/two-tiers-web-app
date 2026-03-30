@@ -3,7 +3,7 @@ locals {
 }
 
 resource "aws_security_group" "alb" {
-  name        = "${local.name_prefix}-AlbSg"
+  name        = "${local.name_prefix}-AlbSG"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
 
@@ -15,47 +15,34 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  egress {
-    description     = "Allow HTTP from ALB to web tier"
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web.id]
-  }
-
   tags = merge(var.tags, {
-    Name = "${local.name_prefix}-AlbSg"
+    Name = "${local.name_prefix}-AlbSG"
   })
 }
 
 resource "aws_security_group" "bastion" {
-  name        = "${local.name_prefix}-BastionSg"
+  name        = "${local.name_prefix}-BastionSG"
   description = "Security group for bastion host"
   vpc_id      = var.vpc_id
 
-  ingress {
-    description = "Allow SSH to bastion from trusted CIDR blocks"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_ssh_cidr_blocks
-  }
-
-  egress {
-    description     = "Allow SSH from bastion to web tier"
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web.id]
+  dynamic "ingress" {
+    for_each = length(var.allowed_ssh_cidr_blocks) > 0 ? [1] : []
+    content {
+      description = "Allow SSH to bastion from trusted CIDR blocks"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = var.allowed_ssh_cidr_blocks
+    }
   }
 
   tags = merge(var.tags, {
-    Name = "${local.name_prefix}-BastionSg"
+    Name = "${local.name_prefix}-BastionSG"
   })
 }
 
-resource "aws_security_group" "web" {
-  name        = "${local.name_prefix}-WebSg"
+resource "aws_security_group" "web_server" {
+  name        = "${local.name_prefix}-WebServerSG"
   description = "Security group for web servers"
   vpc_id      = var.vpc_id
 
@@ -76,7 +63,7 @@ resource "aws_security_group" "web" {
   }
 
   egress {
-    description = "Allow all outbound traffic"
+    description = "Allow outbound for updates, S3, and health checks"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -84,6 +71,6 @@ resource "aws_security_group" "web" {
   }
 
   tags = merge(var.tags, {
-    Name = "${local.name_prefix}-WebSg"
+    Name = "${local.name_prefix}-WebServerSG"
   })
 }
