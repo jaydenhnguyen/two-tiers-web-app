@@ -39,14 +39,14 @@ module "security" {
   tags                    = local.common_tags
 }
 
-module "iam" {
-  source = "../../modules/iam"
-
-  project_name      = var.project_name
-  environment       = local.environment
-  image_bucket_name = var.image_bucket_name
-  tags              = local.common_tags
-}
+# module "iam" {
+#   source = "../../modules/iam"
+#
+#   project_name      = var.project_name
+#   environment       = local.environment
+#   image_bucket_name = var.image_bucket_name
+#   tags              = local.common_tags
+# }
 
 module "alb" {
   source = "../../modules/alb"
@@ -67,13 +67,14 @@ module "web_server" {
   ami_id                       = var.ami_id
   instance_type                = var.vm_instance_type
   web_server_security_group_id = module.security.web_server_security_group_id
-  instance_profile_name        = module.iam.web_instance_profile_name
-  public_key_name              = var.key_pair_name
-  image_bucket_name            = var.image_bucket_name
-  image_file_name              = var.image_file_name
-  team_name                    = var.team_name
-  team_members                 = var.team_members
-  tags                         = local.common_tags
+  # instance_profile_name        = module.iam.web_instance_profile_name
+  instance_profile_name = "LabInstanceProfile"
+  public_key_name       = var.key_pair_name
+  image_bucket_name     = var.image_bucket_name
+  image_file_name       = var.image_file_name
+  team_name             = var.team_name
+  team_members          = var.team_members
+  tags                  = local.common_tags
 }
 
 module "bastion" {
