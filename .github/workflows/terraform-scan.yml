@@ -5,10 +5,12 @@ on:
     branches:
       - staging
       - master
+      - dev
   pull_request:
     branches:
       - staging
       - master
+      - dev
 
 permissions:
   contents: read
