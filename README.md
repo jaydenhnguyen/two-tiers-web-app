@@ -10,6 +10,7 @@
 - Indah Cahyani Styoningrum - 115029258
 - Huu Duc Huy Nguyen - 125109249
 - Leandro Delgado - 114416241
+- Onwuanaku Christian - 185317237
 
 **Repository:** https://github.com/jaydenhnguyen/two-tiers-web-app
 
