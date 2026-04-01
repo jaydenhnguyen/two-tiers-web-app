@@ -1,0 +1,22 @@
+project_name         =
+team_name            =
+team_members         =
+
+image_bucket_name    =
+image_file_name      =
+
+vpc_cidr             =
+public_subnet_cidrs  =
+private_subnet_cidrs =
+
+key_pair_name            =
+allowed_ssh_cidr_blocks  =
+
+vm_instance_type        = "t3.micro"
+server_min_size         =
+server_max_size         =
+server_desired_capacity =
+bastion_instance_type   =
+additional_tags         = {}
+
+ami_id = "ami-02dfbd4ff395f2a1b"
