@@ -67,7 +67,7 @@ module "web_server" {
   ami_id                       = var.ami_id
   instance_type                = var.vm_instance_type
   web_server_security_group_id = module.security.web_server_security_group_id
-  instance_profile_name = "LabInstanceProfile"
+  instance_profile_name        = "LabInstanceProfile"
   public_key_name              = var.key_pair_name
   image_bucket_name            = var.image_bucket_name
   image_file_name              = var.image_file_name
