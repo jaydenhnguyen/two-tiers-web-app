@@ -9,9 +9,9 @@ systemctl start httpd
 mkdir -p /var/www/html/assets
 
 if aws s3 cp "s3://${image_bucket_name}/${image_file_name}" "/var/www/html/assets/site-image"; then
-  IMAGE_TAG="<img src=\"/assets/site-image\" alt=\"Site image\" style=\"max-width: 640px; height: auto;\">"
+  IMAGE_TAG="<figure class=\"hero-image\"><img src=\"/assets/site-image\" alt=\"Team image\" width=\"720\" height=\"auto\" loading=\"lazy\"></figure>"
 else
-  IMAGE_TAG="<p>Image download failed from s3://${image_bucket_name}/${image_file_name}</p>"
+  IMAGE_TAG="<div class=\"notice notice--error\" role=\"alert\"><strong>Image unavailable.</strong> Could not download from s3://${image_bucket_name}/${image_file_name}</div>"
 fi
 
 cat > /var/www/html/index.html <<EOF
@@ -20,13 +20,150 @@ cat > /var/www/html/index.html <<EOF
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${team_name} - ${environment}</title>
+  <meta name="color-scheme" content="light dark">
+  <title>${team_name} — ${environment}</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e7ecf3;
+      --muted: #9aa7b8;
+      --accent: #3d8bfd;
+      --accent-soft: rgba(61, 139, 253, 0.15);
+      --radius: 14px;
+      --shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f4f6fa;
+        --surface: #ffffff;
+        --border: rgba(15, 20, 25, 0.08);
+        --text: #1a2332;
+        --muted: #5c6b7d;
+        --accent: #2563eb;
+        --accent-soft: rgba(37, 99, 235, 0.12);
+        --shadow: 0 20px 40px rgba(15, 20, 25, 0.08);
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(1200px 600px at 10% -10%, var(--accent-soft), transparent),
+                  radial-gradient(900px 500px at 100% 0%, rgba(139, 92, 246, 0.12), transparent),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 4vw, 2.5rem);
+    }
+    header {
+      margin-bottom: 2rem;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.5rem;
+      line-height: 1.2;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+    main {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-body {
+      padding: clamp(1.25rem, 3vw, 2rem);
+    }
+    h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 0.75rem;
+    }
+    .members {
+      font-size: 1.05rem;
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+    .members li { margin-bottom: 0.35rem; }
+    .hero-image {
+      margin: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
+      border-top: 1px solid var(--border);
+      padding: clamp(1rem, 3vw, 1.75rem);
+      text-align: center;
+    }
+    .hero-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+    .notice {
+      margin: 0;
+      padding: 1rem 1.25rem;
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border);
+    }
+    .notice--error {
+      background: rgba(239, 68, 68, 0.08);
+      color: inherit;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
-  <h1>${team_name}</h1>
-  <p>Environment: ${environment}</p>
-  <p>Team Members: ${members}</p>
-  $${IMAGE_TAG}
+  <div class="wrap">
+    <header>
+      <span class="badge">${environment}</span>
+      <h1>${team_name}</h1>
+      <p class="subtitle">Two-tier static site · Served behind the load balancer · Image from private S3</p>
+    </header>
+    <main>
+      <div class="card-body">
+        <h2>Team members</h2>
+        <ul class="members">
+%{ for m in split(", ", members) ~}
+          <li>${m}</li>
+%{ endfor ~}
+        </ul>
+      </div>
+      $${IMAGE_TAG}
+    </main>
+    <footer>Built with Terraform · Amazon Linux · httpd</footer>
+  </div>
 </body>
 </html>
 EOF
