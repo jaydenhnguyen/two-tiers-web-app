@@ -371,3 +371,8 @@ Empty or delete S3 buckets only after you no longer need state or objects (destr
 
 ## 📄 License
 **Academic use only for ACS730 Final Project**
+
+
+## Contribution Update
+- Added Terraform staging formatting fix support
+- Validated the CI pipeline check for the staging environment
